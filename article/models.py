@@ -1,18 +1,39 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+## -*- coding: utf-8 -*-
+#from __future__ import unicode_literals
+#
+#from django.db import models
+#
+## Create your models here.
+#class Article(models.Model):
+#    title = models.CharField(max_length = 100)
+#    category = models.CharField(max_length = 50, blank = True)
+#    date_time = models.DateTimeField(auto_now_add = True) 
+#    content = models.TextField(blank = True, null = True)
+#
+#
+#    def __unicode__(self):
+#         return self.title
+#
+#    class Meta:
+#        ordering = ['-date_time']
+#
 
 from django.db import models
-
-# Create your models here.
-class Article(models.Model):
-    title = models.CharField(max_length = 100)
-    category = models.CharField(max_length = 50, blank = True)
-    date_time = models.DateTimeField(auto_now_add = True) 
-    content = models.TextField(blank = True, null = True)
+from django.utils import timezone
 
 
-    def __unicode__(self):
-         return self.title
+class Post(models.Model):
+    author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    text = models.TextField()
+    created_date = models.DateTimeField(
+            default=timezone.now)
+    published_date = models.DateTimeField(
+            blank=True, null=True)
 
-    class Meta:
-        ordering = ['-date_time']
+    def publish(self):
+        self.published_date = timezone.now()
+        self.save()
+
+    def __str__(self):
+        return self.title
